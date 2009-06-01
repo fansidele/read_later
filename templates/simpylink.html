@@ -1,0 +1,10 @@
+$def with (link)
+
+<p style="text-indent:-25px;">
+    $if 'starred' in link.tags:
+        <img src="static/starred.png" />
+    $else:
+        <img src="static/unstarred.png" />
+    <a class="SimpyLink_name" href="$link.url">$link.name</a>
+</p>
+$:link.note_html

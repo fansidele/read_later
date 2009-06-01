@@ -1,0 +1,949 @@
+Help on module simpy:
+
+NAME
+    simpy
+
+FILE
+    /cygdrive/d/Daten/projects/simpyapi-python/simpy.py
+
+DESCRIPTION
+    Simple wrapper-lib for accessing the http://www.simpy.com/ REST API via python.
+    See http://simpytools.sourceforge.net for details, and libs in other languages
+    
+    Copyright:
+        Copyright (c) 2005-2007, Benjamin Reitzammer <benjamin@nur-eine-i.de>, All rights reserved.
+        
+    License:
+        This program is free software. You can distribute/modify this program under 
+        the terms of either 
+        
+        * GNU LGPL, Lesser General Public License version 2.1 available at http://www.gnu.org/licenses/lgpl.txt
+        or 
+        * Apache License Version 2.0 available at http://www.apache.org/licenses/LICENSE-2.0.txt 
+        
+    Synopsis:
+        # get and store links in files matching a query
+        client = SimpyClient('user', 'passwd')
+        links = client.getLinks( {'limit':20, 'q':'+tags:"programming" +tags:"trails"'} )
+        for i, link in enumerate(links):
+            s = urllib2.urlopen(link.url)
+            if s is not None: file(str(i)+".html", 'w+').write(s.read())
+            else: print "URL "+link.url+" was not handled"
+            
+    Supported Calls:
+          * GetTags, RemoveTag, RenameTag, MergeTags, SplitTag
+          * GetLinks, SaveLink, DeleteLink 
+          * GetWatchlists, GetWatchlist 
+          * GetNotes, SaveNote, DeleteNote
+            
+    Required: 
+        Python 2.3 or later (may run with older version, but this is untested)
+    
+    Acknowledgements:
+        This lib was heavily influenced by http://delicious-py.berlios.de/
+
+CLASSES
+    __builtin__.dict(__builtin__.object)
+        SimpyData
+            Link
+            Note
+            Watchlist
+    SimpyClient
+    ValidationError
+    urllib2.HTTPRedirectHandler(urllib2.BaseHandler)
+        PostRedirectHandler
+    
+    class Link(SimpyData)
+     |  Data holder class for links
+     |  
+     |  Method resolution order:
+     |      Link
+     |      SimpyData
+     |      __builtin__.dict
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __init__(self, **kw)
+     |  
+     |  toPost(self)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  args = {'accessType': '', 'addDate': None, 'addDateStr': '', 'modDate'...
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from SimpyData:
+     |  
+     |  __str__(self)
+     |  
+     |  acc(self)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from SimpyData:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from __builtin__.dict:
+     |  
+     |  __cmp__(...)
+     |      x.__cmp__(y) <==> cmp(x,y)
+     |  
+     |  __contains__(...)
+     |      D.__contains__(k) -> True if D has a key k, else False
+     |  
+     |  __delitem__(...)
+     |      x.__delitem__(y) <==> del x[y]
+     |  
+     |  __eq__(...)
+     |      x.__eq__(y) <==> x==y
+     |  
+     |  __ge__(...)
+     |      x.__ge__(y) <==> x>=y
+     |  
+     |  __getattribute__(...)
+     |      x.__getattribute__('name') <==> x.name
+     |  
+     |  __getitem__(...)
+     |      x.__getitem__(y) <==> x[y]
+     |  
+     |  __gt__(...)
+     |      x.__gt__(y) <==> x>y
+     |  
+     |  __hash__(...)
+     |      x.__hash__() <==> hash(x)
+     |  
+     |  __iter__(...)
+     |      x.__iter__() <==> iter(x)
+     |  
+     |  __le__(...)
+     |      x.__le__(y) <==> x<=y
+     |  
+     |  __len__(...)
+     |      x.__len__() <==> len(x)
+     |  
+     |  __lt__(...)
+     |      x.__lt__(y) <==> x<y
+     |  
+     |  __ne__(...)
+     |      x.__ne__(y) <==> x!=y
+     |  
+     |  __repr__(...)
+     |      x.__repr__() <==> repr(x)
+     |  
+     |  __setitem__(...)
+     |      x.__setitem__(i, y) <==> x[i]=y
+     |  
+     |  clear(...)
+     |      D.clear() -> None.  Remove all items from D.
+     |  
+     |  copy(...)
+     |      D.copy() -> a shallow copy of D
+     |  
+     |  get(...)
+     |      D.get(k[,d]) -> D[k] if k in D, else d.  d defaults to None.
+     |  
+     |  has_key(...)
+     |      D.has_key(k) -> True if D has a key k, else False
+     |  
+     |  items(...)
+     |      D.items() -> list of D's (key, value) pairs, as 2-tuples
+     |  
+     |  iteritems(...)
+     |      D.iteritems() -> an iterator over the (key, value) items of D
+     |  
+     |  iterkeys(...)
+     |      D.iterkeys() -> an iterator over the keys of D
+     |  
+     |  itervalues(...)
+     |      D.itervalues() -> an iterator over the values of D
+     |  
+     |  keys(...)
+     |      D.keys() -> list of D's keys
+     |  
+     |  pop(...)
+     |      D.pop(k[,d]) -> v, remove specified key and return the corresponding value
+     |      If key is not found, d is returned if given, otherwise KeyError is raised
+     |  
+     |  popitem(...)
+     |      D.popitem() -> (k, v), remove and return some (key, value) pair as a
+     |      2-tuple; but raise KeyError if D is empty
+     |  
+     |  setdefault(...)
+     |      D.setdefault(k[,d]) -> D.get(k,d), also set D[k]=d if k not in D
+     |  
+     |  update(...)
+     |      D.update(E, **F) -> None.  Update D from E and F: for k in E: D[k] = E[k]
+     |      (if E has keys else: for (k, v) in E: D[k] = v) then: for k in F: D[k] = F[k]
+     |  
+     |  values(...)
+     |      D.values() -> list of D's values
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from __builtin__.dict:
+     |  
+     |  __new__ = <built-in method __new__ of type object at 0x6cb8d150>
+     |      T.__new__(S, ...) -> a new object with type S, a subtype of T
+     |  
+     |  fromkeys = <built-in method fromkeys of type object at 0x72f154>
+     |      dict.fromkeys(S[,v]) -> New dict with keys from S and values equal to v.
+     |      v defaults to None.
+    
+    class Note(SimpyData)
+     |  Data holder class for notes
+     |  
+     |  Method resolution order:
+     |      Note
+     |      SimpyData
+     |      __builtin__.dict
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __init__(self, **kw)
+     |  
+     |  toPost(self)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  args = {'accessType': '', 'addDate': None, 'addDateStr': '', 'descript...
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from SimpyData:
+     |  
+     |  __str__(self)
+     |  
+     |  acc(self)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from SimpyData:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from __builtin__.dict:
+     |  
+     |  __cmp__(...)
+     |      x.__cmp__(y) <==> cmp(x,y)
+     |  
+     |  __contains__(...)
+     |      D.__contains__(k) -> True if D has a key k, else False
+     |  
+     |  __delitem__(...)
+     |      x.__delitem__(y) <==> del x[y]
+     |  
+     |  __eq__(...)
+     |      x.__eq__(y) <==> x==y
+     |  
+     |  __ge__(...)
+     |      x.__ge__(y) <==> x>=y
+     |  
+     |  __getattribute__(...)
+     |      x.__getattribute__('name') <==> x.name
+     |  
+     |  __getitem__(...)
+     |      x.__getitem__(y) <==> x[y]
+     |  
+     |  __gt__(...)
+     |      x.__gt__(y) <==> x>y
+     |  
+     |  __hash__(...)
+     |      x.__hash__() <==> hash(x)
+     |  
+     |  __iter__(...)
+     |      x.__iter__() <==> iter(x)
+     |  
+     |  __le__(...)
+     |      x.__le__(y) <==> x<=y
+     |  
+     |  __len__(...)
+     |      x.__len__() <==> len(x)
+     |  
+     |  __lt__(...)
+     |      x.__lt__(y) <==> x<y
+     |  
+     |  __ne__(...)
+     |      x.__ne__(y) <==> x!=y
+     |  
+     |  __repr__(...)
+     |      x.__repr__() <==> repr(x)
+     |  
+     |  __setitem__(...)
+     |      x.__setitem__(i, y) <==> x[i]=y
+     |  
+     |  clear(...)
+     |      D.clear() -> None.  Remove all items from D.
+     |  
+     |  copy(...)
+     |      D.copy() -> a shallow copy of D
+     |  
+     |  get(...)
+     |      D.get(k[,d]) -> D[k] if k in D, else d.  d defaults to None.
+     |  
+     |  has_key(...)
+     |      D.has_key(k) -> True if D has a key k, else False
+     |  
+     |  items(...)
+     |      D.items() -> list of D's (key, value) pairs, as 2-tuples
+     |  
+     |  iteritems(...)
+     |      D.iteritems() -> an iterator over the (key, value) items of D
+     |  
+     |  iterkeys(...)
+     |      D.iterkeys() -> an iterator over the keys of D
+     |  
+     |  itervalues(...)
+     |      D.itervalues() -> an iterator over the values of D
+     |  
+     |  keys(...)
+     |      D.keys() -> list of D's keys
+     |  
+     |  pop(...)
+     |      D.pop(k[,d]) -> v, remove specified key and return the corresponding value
+     |      If key is not found, d is returned if given, otherwise KeyError is raised
+     |  
+     |  popitem(...)
+     |      D.popitem() -> (k, v), remove and return some (key, value) pair as a
+     |      2-tuple; but raise KeyError if D is empty
+     |  
+     |  setdefault(...)
+     |      D.setdefault(k[,d]) -> D.get(k,d), also set D[k]=d if k not in D
+     |  
+     |  update(...)
+     |      D.update(E, **F) -> None.  Update D from E and F: for k in E: D[k] = E[k]
+     |      (if E has keys else: for (k, v) in E: D[k] = v) then: for k in F: D[k] = F[k]
+     |  
+     |  values(...)
+     |      D.values() -> list of D's values
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from __builtin__.dict:
+     |  
+     |  __new__ = <built-in method __new__ of type object at 0x6cb8d150>
+     |      T.__new__(S, ...) -> a new object with type S, a subtype of T
+     |  
+     |  fromkeys = <built-in method fromkeys of type object at 0x7312e4>
+     |      dict.fromkeys(S[,v]) -> New dict with keys from S and values equal to v.
+     |      v defaults to None.
+    
+    class PostRedirectHandler(urllib2.HTTPRedirectHandler)
+     |  This is needed when making a POST request to simpy.
+     |  
+     |  It's needed, e.g. when saving notes and links, because simpy's authentication
+     |  is handled via a redirect (302) to a login page. The HTTPRedirectHandler 
+     |  implementation converts the POST request silently to a GET request, causing
+     |  the request to lose all data, that should've been saved. 
+     |  This handler fixes this problem by making the redirected request
+     |  a POST request.
+     |  
+     |  see http://docs.python.org/lib/http-redirect-handler.html
+     |  
+     |  Method resolution order:
+     |      PostRedirectHandler
+     |      urllib2.HTTPRedirectHandler
+     |      urllib2.BaseHandler
+     |  
+     |  Methods defined here:
+     |  
+     |  __init__(self, data)
+     |  
+     |  redirect_request(self, req, fp, code, msg, headers, newurl)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from urllib2.HTTPRedirectHandler:
+     |  
+     |  http_error_301 = http_error_302(self, req, fp, code, msg, headers)
+     |      # Implementation note: To avoid the server sending us into an
+     |      # infinite loop, the request object needs to track what URLs we
+     |      # have already seen.  Do this by adding a handler-specific
+     |      # attribute to the Request object.
+     |  
+     |  http_error_302(self, req, fp, code, msg, headers)
+     |      # Implementation note: To avoid the server sending us into an
+     |      # infinite loop, the request object needs to track what URLs we
+     |      # have already seen.  Do this by adding a handler-specific
+     |      # attribute to the Request object.
+     |  
+     |  http_error_303 = http_error_302(self, req, fp, code, msg, headers)
+     |      # Implementation note: To avoid the server sending us into an
+     |      # infinite loop, the request object needs to track what URLs we
+     |      # have already seen.  Do this by adding a handler-specific
+     |      # attribute to the Request object.
+     |  
+     |  http_error_307 = http_error_302(self, req, fp, code, msg, headers)
+     |      # Implementation note: To avoid the server sending us into an
+     |      # infinite loop, the request object needs to track what URLs we
+     |      # have already seen.  Do this by adding a handler-specific
+     |      # attribute to the Request object.
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from urllib2.HTTPRedirectHandler:
+     |  
+     |  inf_msg = 'The HTTP server returned a redirect error that w...n infini...
+     |  
+     |  max_redirections = 10
+     |  
+     |  max_repeats = 4
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from urllib2.BaseHandler:
+     |  
+     |  __lt__(self, other)
+     |  
+     |  add_parent(self, parent)
+     |  
+     |  close(self)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from urllib2.BaseHandler:
+     |  
+     |  handler_order = 500
+    
+    class SimpyClient
+     |  The client abstraction of simpy's REST API.
+     |  
+     |  Use instances of this class to communicate with the REST API. 
+     |  
+     |  All calls that modify data on the server side are issued as POST request,
+     |  while reading requests are performed as GET requests.
+     |  
+     |  Methods defined here:
+     |  
+     |  __init__(self, user, passwd)
+     |      Create an instance of this class
+     |      
+     |      Parameters:
+     |        user   - the username to use when authenticating against the API
+     |        passwd - the password to use when authenticating against the API
+     |  
+     |  deleteLink(self, href)
+     |      Makes a call to DeleteLink() of the simpy API, deleting the bookmark
+     |      specified by the parameter 'href'
+     |      
+     |      Parameters:
+     |          href - the 'http' URL that represents the bookmark that should be saved
+     |      
+     |      Return:
+     |        A dictionary containing 'code' and 'message' of the response. A code
+     |        unequal zero indicates an error.
+     |  
+     |  deleteNote(self, note)
+     |      Makes a call to DeleteNote() of the simpy API
+     |      
+     |      Return:
+     |        A dictionary containing 'code' and 'message' of the response. A code
+     |        unequal zero indicates an error.
+     |  
+     |  getLinks(self, params={})
+     |      Makes a call to GetLinks() of the simpy API  
+     |      
+     |      Parameters:
+     |          params - optional dictionary of parameters, that will be sent with the call.
+     |              Valid parameters are:
+     |              <q> A query string that forces the API call to return only the 
+     |                 matching links. You can use the usual Simpy search syntax and 
+     |                 search fields.
+     |              <limit> Limits the number of links returned.
+     |              <date> This parameter should not be used in combination with 
+     |                  the afterDate and beforeDate parameters. It limits the links 
+     |                  returned to links added on the given date.
+     |              <afterDate> This parameter should be used in combination with the
+     |                  beforeDate parameter. It limits the links returned to links
+     |                  added after the given date, excluding the date specified.
+     |              <beforeDate> This parameter should be used in combination with 
+     |                  the afterDate parameter. It limits the links returned to 
+     |                  links added before the given date, excluding the date specified.
+     |          
+     |      Return:
+     |          A list of Link-objects, that's never <None>
+     |  
+     |  getNotes(self, query='', limit=0)
+     |      Makes a call to GetNotes() of the simpy API
+     |      
+     |      Parameters:
+     |        query - the query string, that denotes the search query the notes are searched for
+     |        limit - the number of items returned by the request, default is 0, which retrieves all notes
+     |                 
+     |      Return: 
+     |          A list of Note-objects, or <None> if the 'query' provided is <None>
+     |  
+     |  getTags(self, limit=0)
+     |      Makes a call to GetTags() of the simpy API
+     |      
+     |      Parameters
+     |          limit - the number of tags returned by the call, default is 0, which gets all tags
+     |          
+     |      Return:
+     |        A list of dictionaries that contain the values for 'count' and 'tag' 
+     |        as returned by the call to the API, never <None>
+     |  
+     |  getWatchlist(self, watchlistId)
+     |      Makes a call to GetWatchlist() of the simpy API
+     |      
+     |      Return:
+     |          A Watchlist object if the provided Id was a valid watchlist id, None
+     |          otherwise
+     |  
+     |  getWatchlists(self)
+     |      Makes a call to GetWatchlists() of the simpy API
+     |      
+     |      Return:
+     |  
+     |  mergeTags(self, fromTag1=None, fromTag2=None, toTag=None)
+     |      Makes a call to MergeTags() of the simpy API, merging the fromTag1 
+     |      and fromTag2 to the tag specified by toTag
+     |      
+     |      Parameters
+     |          fromTag1 - the first tag that should be merged
+     |          fromTag2 - the second tag that should be merged
+     |          toTag - the target tag that the two tags should be merged to
+     |      
+     |      Return:
+     |        A dictionary containing 'code' and 'message' of the response. A code
+     |        unequal zero indicates an error, or None if any of the provided tag 
+     |        strings is None
+     |  
+     |  removeTag(self, tag=None)
+     |      Makes a call to RemoveTag() of the simpy API, removing the specified tag
+     |      
+     |      Parameters
+     |          tag - the tag to delete
+     |      
+     |      Return:
+     |        A dictionary containing 'code' and 'message' of the response. A code
+     |        unequal zero indicates an error, or None if the provided tag string is 
+     |        None
+     |  
+     |  renameTag(self, fromTag=None, toTag=None)
+     |      Makes a call to RenameTag() of the simpy API, renaming the fromTag to 
+     |      the value specified by toTag
+     |      
+     |      Parameters
+     |          fromTag - the tag which should be renamed
+     |          toTag - the target name the 'fromTag' should be renamed to
+     |      
+     |      Return:
+     |        A dictionary containing 'code' and 'message' of the response. A code
+     |        unequal zero indicates an error, or None if any of the provided tag 
+     |        strings is None
+     |  
+     |  saveLink(self, link)
+     |      Makes a call to SaveLink() of the simpy API
+     |      
+     |      Parameters:
+     |          link - a Link object representing the link to be saved
+     |      
+     |      Return:
+     |        A dictionary containing 'code' and 'message' of the response. A code
+     |        unequal zero indicates an error.
+     |  
+     |  saveNote(self, note)
+     |      Makes a call to SaveNote() of the simpy API
+     |      
+     |      Return:
+     |        A dictionary containing 'code' and 'message' of the response. A code
+     |        unequal zero indicates an error.
+     |  
+     |  splitTag(self, tag=None, toTag1=None, toTag2=None)
+     |      Makes a call to SplitTag() of the simpy API, splitting the tag specified 
+     |      by 'tag' to the tags specified by toTag1 and toTag2
+     |      
+     |      Parameters
+     |          tag - the tag that should be split in two new tags
+     |          toTag1 - the first tag the source tag should be merged to
+     |          toTag2 - the second tag the source tag should be merged to
+     |      
+     |      Return:
+     |        A dictionary containing 'code' and 'message' of the response. A code
+     |        unequal zero indicates an error, or None if any of the provided tag 
+     |        strings is None
+    
+    class SimpyData(__builtin__.dict)
+     |  Base class that provides nice utility methods for data holding classes
+     |  
+     |  Method resolution order:
+     |      SimpyData
+     |      __builtin__.dict
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __init__(self, **kw)
+     |  
+     |  __str__(self)
+     |  
+     |  acc(self)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from __builtin__.dict:
+     |  
+     |  __cmp__(...)
+     |      x.__cmp__(y) <==> cmp(x,y)
+     |  
+     |  __contains__(...)
+     |      D.__contains__(k) -> True if D has a key k, else False
+     |  
+     |  __delitem__(...)
+     |      x.__delitem__(y) <==> del x[y]
+     |  
+     |  __eq__(...)
+     |      x.__eq__(y) <==> x==y
+     |  
+     |  __ge__(...)
+     |      x.__ge__(y) <==> x>=y
+     |  
+     |  __getattribute__(...)
+     |      x.__getattribute__('name') <==> x.name
+     |  
+     |  __getitem__(...)
+     |      x.__getitem__(y) <==> x[y]
+     |  
+     |  __gt__(...)
+     |      x.__gt__(y) <==> x>y
+     |  
+     |  __hash__(...)
+     |      x.__hash__() <==> hash(x)
+     |  
+     |  __iter__(...)
+     |      x.__iter__() <==> iter(x)
+     |  
+     |  __le__(...)
+     |      x.__le__(y) <==> x<=y
+     |  
+     |  __len__(...)
+     |      x.__len__() <==> len(x)
+     |  
+     |  __lt__(...)
+     |      x.__lt__(y) <==> x<y
+     |  
+     |  __ne__(...)
+     |      x.__ne__(y) <==> x!=y
+     |  
+     |  __repr__(...)
+     |      x.__repr__() <==> repr(x)
+     |  
+     |  __setitem__(...)
+     |      x.__setitem__(i, y) <==> x[i]=y
+     |  
+     |  clear(...)
+     |      D.clear() -> None.  Remove all items from D.
+     |  
+     |  copy(...)
+     |      D.copy() -> a shallow copy of D
+     |  
+     |  get(...)
+     |      D.get(k[,d]) -> D[k] if k in D, else d.  d defaults to None.
+     |  
+     |  has_key(...)
+     |      D.has_key(k) -> True if D has a key k, else False
+     |  
+     |  items(...)
+     |      D.items() -> list of D's (key, value) pairs, as 2-tuples
+     |  
+     |  iteritems(...)
+     |      D.iteritems() -> an iterator over the (key, value) items of D
+     |  
+     |  iterkeys(...)
+     |      D.iterkeys() -> an iterator over the keys of D
+     |  
+     |  itervalues(...)
+     |      D.itervalues() -> an iterator over the values of D
+     |  
+     |  keys(...)
+     |      D.keys() -> list of D's keys
+     |  
+     |  pop(...)
+     |      D.pop(k[,d]) -> v, remove specified key and return the corresponding value
+     |      If key is not found, d is returned if given, otherwise KeyError is raised
+     |  
+     |  popitem(...)
+     |      D.popitem() -> (k, v), remove and return some (key, value) pair as a
+     |      2-tuple; but raise KeyError if D is empty
+     |  
+     |  setdefault(...)
+     |      D.setdefault(k[,d]) -> D.get(k,d), also set D[k]=d if k not in D
+     |  
+     |  update(...)
+     |      D.update(E, **F) -> None.  Update D from E and F: for k in E: D[k] = E[k]
+     |      (if E has keys else: for (k, v) in E: D[k] = v) then: for k in F: D[k] = F[k]
+     |  
+     |  values(...)
+     |      D.values() -> list of D's values
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from __builtin__.dict:
+     |  
+     |  __new__ = <built-in method __new__ of type object at 0x6cb8d150>
+     |      T.__new__(S, ...) -> a new object with type S, a subtype of T
+     |  
+     |  fromkeys = <built-in method fromkeys of type object at 0x6e8cdc>
+     |      dict.fromkeys(S[,v]) -> New dict with keys from S and values equal to v.
+     |      v defaults to None.
+    
+    class ValidationError
+     |  Signals that it was tried to save an incomplete/invalid object.
+     |  
+     |  Methods defined here:
+     |  
+     |  __init__(self, obj)
+     |  
+     |  __str__(self)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  obj = None
+    
+    class Watchlist(SimpyData)
+     |  Data holder class for a watchlist
+     |  
+     |  Method resolution order:
+     |      Watchlist
+     |      SimpyData
+     |      __builtin__.dict
+     |      __builtin__.object
+     |  
+     |  Methods defined here:
+     |  
+     |  __init__(self, **kw)
+     |  
+     |  toPost(self)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  args = {'addDate': None, 'description': '', 'filters': None, 'identifi...
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from SimpyData:
+     |  
+     |  __str__(self)
+     |  
+     |  acc(self)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from SimpyData:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from __builtin__.dict:
+     |  
+     |  __cmp__(...)
+     |      x.__cmp__(y) <==> cmp(x,y)
+     |  
+     |  __contains__(...)
+     |      D.__contains__(k) -> True if D has a key k, else False
+     |  
+     |  __delitem__(...)
+     |      x.__delitem__(y) <==> del x[y]
+     |  
+     |  __eq__(...)
+     |      x.__eq__(y) <==> x==y
+     |  
+     |  __ge__(...)
+     |      x.__ge__(y) <==> x>=y
+     |  
+     |  __getattribute__(...)
+     |      x.__getattribute__('name') <==> x.name
+     |  
+     |  __getitem__(...)
+     |      x.__getitem__(y) <==> x[y]
+     |  
+     |  __gt__(...)
+     |      x.__gt__(y) <==> x>y
+     |  
+     |  __hash__(...)
+     |      x.__hash__() <==> hash(x)
+     |  
+     |  __iter__(...)
+     |      x.__iter__() <==> iter(x)
+     |  
+     |  __le__(...)
+     |      x.__le__(y) <==> x<=y
+     |  
+     |  __len__(...)
+     |      x.__len__() <==> len(x)
+     |  
+     |  __lt__(...)
+     |      x.__lt__(y) <==> x<y
+     |  
+     |  __ne__(...)
+     |      x.__ne__(y) <==> x!=y
+     |  
+     |  __repr__(...)
+     |      x.__repr__() <==> repr(x)
+     |  
+     |  __setitem__(...)
+     |      x.__setitem__(i, y) <==> x[i]=y
+     |  
+     |  clear(...)
+     |      D.clear() -> None.  Remove all items from D.
+     |  
+     |  copy(...)
+     |      D.copy() -> a shallow copy of D
+     |  
+     |  get(...)
+     |      D.get(k[,d]) -> D[k] if k in D, else d.  d defaults to None.
+     |  
+     |  has_key(...)
+     |      D.has_key(k) -> True if D has a key k, else False
+     |  
+     |  items(...)
+     |      D.items() -> list of D's (key, value) pairs, as 2-tuples
+     |  
+     |  iteritems(...)
+     |      D.iteritems() -> an iterator over the (key, value) items of D
+     |  
+     |  iterkeys(...)
+     |      D.iterkeys() -> an iterator over the keys of D
+     |  
+     |  itervalues(...)
+     |      D.itervalues() -> an iterator over the values of D
+     |  
+     |  keys(...)
+     |      D.keys() -> list of D's keys
+     |  
+     |  pop(...)
+     |      D.pop(k[,d]) -> v, remove specified key and return the corresponding value
+     |      If key is not found, d is returned if given, otherwise KeyError is raised
+     |  
+     |  popitem(...)
+     |      D.popitem() -> (k, v), remove and return some (key, value) pair as a
+     |      2-tuple; but raise KeyError if D is empty
+     |  
+     |  setdefault(...)
+     |      D.setdefault(k[,d]) -> D.get(k,d), also set D[k]=d if k not in D
+     |  
+     |  update(...)
+     |      D.update(E, **F) -> None.  Update D from E and F: for k in E: D[k] = E[k]
+     |      (if E has keys else: for (k, v) in E: D[k] = v) then: for k in F: D[k] = F[k]
+     |  
+     |  values(...)
+     |      D.values() -> list of D's values
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes inherited from __builtin__.dict:
+     |  
+     |  __new__ = <built-in method __new__ of type object at 0x6cb8d150>
+     |      T.__new__(S, ...) -> a new object with type S, a subtype of T
+     |  
+     |  fromkeys = <built-in method fromkeys of type object at 0x73163c>
+     |      dict.fromkeys(S[,v]) -> New dict with keys from S and values equal to v.
+     |      v defaults to None.
+
+FUNCTIONS
+    GET(url, user, passwd, params=None)
+        Performs GET request on url. Appends optional given 'params' as query params
+        to URL. 
+        Handles Basic Authentication and encoding of parameters.
+        
+        Return:
+            Response body as string.
+    
+    POST(url, user, passwd, params)
+        Performs a POST to the specified URL, 'params' are added to body of request. 
+        Handles Basic Authentication and encoding of parameters.
+        
+        Return:
+            Response body as string.
+    
+    parseData(string)
+        Parse a list of <link> or <note> elements into a list of corresponding objects.
+    
+    parseSimpyDate(dateStr)
+        Parses a date string in the form 'YYYY-MM-DD' or 'YYYY-MM-DD HH:mm'.
+        
+        Return:
+          A <date> or respectively a <datetime> object, depending on the 
+          input. <None> if the provided string could not be parsed.
+    
+    parseTags(string)
+        Parses a response of the GetTags() call to the simpy API.
+        
+        Return:
+          A list of dictionaries that contain 'count' int and a 'tag' string, 
+          representing the list of tags that were returned by the API.
+    
+    parseVoidResponse(string)
+        Parse a response of a 'void' API call. These are mostly calls that 
+        modify an entity on the server.
+        A response looks like this:
+            <status>
+              <code>0</code>
+              <message>Link saved successfully.</message>
+            </status>
+            
+        Where the possible codes are:
+            0: Success
+            100: Required parameter missing
+            200: Non-existent entity
+            300: Transient entity retrieval error
+            301: Entity storage error
+            500: Storage quota reached
+        
+        Return:
+          A dictionary that contains an 'code' int and a 'message' string, 
+          representing the response.
+    
+    parseWatchlists(string)
+        Parse a list of <watchlist> elements into a list of corresponding objects.
+    
+    url(u)
+        constructs an absolute URL, out of the provided url, by prepending the 
+        current BASE_URL
+    
+    urlencode(params)
+
+DATA
+    BASE_URL = 'http://www.simpy.com/simpy/api/rest'
+    DELETELINK_URL = '/DeleteLink.do'
+    DELETENOTE_URL = '/DeleteNote.do'
+    GETLINKS_URL = '/GetLinks.do'
+    GETNOTES_URL = '/GetNotes.do'
+    GETTAGS_URL = '/GetTags.do'
+    GETWATCHLISTS_URL = '/GetWatchlists.do'
+    GETWATCHLIST_URL = '/GetWatchlist.do'
+    HOST = 'www.simpy.com'
+    MERGETAGS_URL = '/MergeTags.do'
+    REALM = '/simpy/api/rest'
+    REMOVETAG_URL = '/RemoveTag.do'
+    RENAMETAG_URL = '/RenameTag.do'
+    SAVELINK_URL = '/SaveLink.do'
+    SAVENOTE_URL = '/SaveNote.do'
+    SPLITTAG_URL = '/SplitTag.do'
+    USER_AGENT = 'Mozilla (compatible; simpyapi-python 1.1)'
+    __author__ = 'Benjamin Reitzammer <benjamin@nur-eine-i.de>'
+    __version__ = '1.1'
+
+VERSION
+    1.1
+
+AUTHOR
+    Benjamin Reitzammer <benjamin@nur-eine-i.de>
+
+

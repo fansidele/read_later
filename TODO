@@ -1,0 +1,10 @@
+* Mark as read.
+* Star and unstar items by clicking on the stars.
+-- Can you edit links via the simpy API?
+
+* Forms for adding and editing links with markdown preview of description.
+* Links to readability views.
+* Domain names of items.
+* About page.
+* Improve the javascript bookmarklet -- markdown preview, correct window size, bigger textarea, some confirmation after posting.
+* Use python-markdown 2
